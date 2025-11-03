@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --prefix backend
       - name: Run tests
         env:
           DB_URI: mongodb://localhost:27017/MY_TEST_DATABASE
@@ -32,7 +32,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
           NODE_ENV: test
           PORT: 3001
-        run: npm test
+        run: npm test --prefix backend
 
   build:
     needs: test

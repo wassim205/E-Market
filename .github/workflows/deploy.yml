@@ -5,7 +5,7 @@ on:
     branches:
       - prod
     paths:
-      - 'backend/**'
+      - "backend/**"
 
 jobs:
   test:

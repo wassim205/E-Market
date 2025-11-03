@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - prod
+    paths:
+      - 'backend/**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     services:
       mongo:
         image: mongo:latest
@@ -22,8 +27,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
       - run: npm ci
       - name: Run tests
         env:
@@ -48,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./dockerfile
+          file: ./backend/dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/mern-api-image:latest
 

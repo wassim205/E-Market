@@ -2,13 +2,13 @@ name: Lint and Format
 
 on:
   push:
-    branches: ['**']
+    branches: ["**"]
     paths:
-      - 'backend/**'
+      - "backend/**"
   pull_request:
-    branches: ['**']
+    branches: ["**"]
     paths:
-      - 'backend/**'
+      - "backend/**"
 
 jobs:
   lint-format:

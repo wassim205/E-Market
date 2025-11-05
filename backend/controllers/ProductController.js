@@ -3,16 +3,16 @@ import fs from 'fs';
 import path from 'path';
 import { notificationEmitter } from '../events/notificationEmitter.js';
 import User from '../models/User.js';
-import cacheService from '../services/cacheService.js';
+// import cacheService from '../services/cacheService.js';
 
 // helper function for invalide cache
-const invalidateProductCache = async () => {
-  await Promise.all([
-    cacheService.del('products:*'),
-    cacheService.del('search:*'),
-    cacheService.del('published:*'),
-  ]);
-};
+// const invalidateProductCache = async () => {
+//   await Promise.all([
+//     cacheService.del('products:*'),
+//     cacheService.del('search:*'),
+//     cacheService.del('published:*'),
+//   ]);
+// };
 
 export const createProduct = async (req, res, next) => {
   try {
@@ -130,7 +130,7 @@ export const updateProduct = async (req, res, next) => {
     // }
     /////////////////////////////////////////
 
-    await invalidateProductCache();
+    // await invalidateProductCache();
     res.status(200).json({ message: 'Product updated', data: updatedProduct });
   } catch (error) {
     if (req.files) {

@@ -30,20 +30,20 @@ router.post(
 router.get(
   '/',
   productRateLimit,
-  cacheMiddleware('products', 600),
+  // cacheMiddleware('products', 600),
   productController.getProducts
 );
 //router.get("/", productController.getProducts);
 router.get(
   '/published',
-  cacheMiddleware('published', 600),
+  // cacheMiddleware('published', 600),
   productController.getPublishedProducts
 );
 router.get('/deleted', productController.getDeletedProducts);
 router.get(
   '/search',
   productRateLimit,
-  cacheMiddleware('search', 300),
+  // cacheMiddleware('search', 300),
   productController.searchProducts
 );
 

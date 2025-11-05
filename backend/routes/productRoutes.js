@@ -6,7 +6,7 @@ import { authorizeRoles } from '../middlewares/roles.js';
 import { createUploadFields } from '../config/multerConfig.js';
 import { isAuthenticated } from '../middlewares/auth.js';
 import { checkProductOwnership } from '../middlewares/ownershipMiddleware.js';
-import { cacheMiddleware } from '../middlewares/cache.js';
+// import { cacheMiddleware } from '../middlewares/cache.js';
 import { optimizeImages } from '../middlewares/optimizeImages.js';
 import { productRateLimit } from '../middlewares/rateLimiter.js';
 

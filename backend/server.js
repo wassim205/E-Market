@@ -25,12 +25,18 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import swaggerOptions from './config/swagger.js';
 
+import helmet from 'helmet';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+
+
 const env = process.env.NODE_ENV || 'development'; // Default to development
 dotenv.config({ path: `./.env.${env}` });
 const uri = process.env.DB_URI;
 //dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 // console.log(config);
 
 const PORT = config.port;
@@ -52,6 +58,13 @@ app.use(requestLogger);
 app.get('/', (req, res) => {
   res.send(`Server is running on http://localhost:${PORT}`);
 });
+
+app.use(helmet());
+app.use(cors({
+  origin: process.env.ALLOWED_URL,
+  credentials: true,
+}));
+
 
 // Start cron jobs
 // lowStockJob.start();

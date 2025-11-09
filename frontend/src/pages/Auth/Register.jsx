@@ -26,7 +26,7 @@ export default function Register() {
         email,
         password,
       });
-      console.log(res);
+      // console.log(res);
 
       // Store the token in localstorage
       const token = res.data.data.token;

@@ -1,7 +1,51 @@
-import React from 'react';
-import { Search, ShoppingBag, User, Heart, Menu, ArrowRight, Star, Truck, Shield, Award } from 'lucide-react';
+import {
+  Search,
+  ShoppingBag,
+  User,
+  Heart,
+  Menu,
+  ArrowRight,
+  Star,
+  Truck,
+  Shield,
+  Award,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import api from "../config/axios";
+import { ToastContainer } from "../components/Toast";
+// import { CardSkeletonLoader } from "../components/Loader";
 
-export default function MinimalistHome() {
+export default function Home() {
+  const [products, setProducts] = useState([]);
+  const [toasts, setToasts] = useState([]);
+  // const [loading, setLoading] = useState(false);
+    
+
+  const addToast = (type, message) => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, type, message }]);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
+
+  useEffect(() => {
+    async function fetchProducts() {
+      // setLoading(true);
+      try {
+        const res = await api.get("/products?limit=4");
+        setProducts(res.data.data);
+        // setLoading(false);
+      } catch (error) {
+         addToast('error', error);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -10,12 +54,20 @@ export default function MinimalistHome() {
           {/* Top Bar */}
           <div className="flex items-center justify-between py-4 text-sm text-gray-600">
             <div className="hidden md:flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors">Stores</button>
-              <button className="hover:text-gray-900 transition-colors">Help</button>
+              <button className="hover:text-gray-900 transition-colors">
+                Stores
+              </button>
+              <button className="hover:text-gray-900 transition-colors">
+                Help
+              </button>
             </div>
             <div className="flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors">Track Order</button>
-              <button className="hover:text-gray-900 transition-colors">Sign In</button>
+              <button className="hover:text-gray-900 transition-colors">
+                Track Order
+              </button>
+              <button className="hover:text-gray-900 transition-colors">
+                Sign In
+              </button>
             </div>
           </div>
 
@@ -30,11 +82,21 @@ export default function MinimalistHome() {
             </div>
 
             <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-700">
-              <button className="hover:text-gray-900 transition-colors">New Arrivals</button>
-              <button className="hover:text-gray-900 transition-colors">Men</button>
-              <button className="hover:text-gray-900 transition-colors">Women</button>
-              <button className="hover:text-gray-900 transition-colors">Kids</button>
-              <button className="hover:text-gray-900 transition-colors">Sale</button>
+              <button className="hover:text-gray-900 transition-colors">
+                New Arrivals
+              </button>
+              <button className="hover:text-gray-900 transition-colors">
+                Men
+              </button>
+              <button className="hover:text-gray-900 transition-colors">
+                Women
+              </button>
+              <button className="hover:text-gray-900 transition-colors">
+                Kids
+              </button>
+              <button className="hover:text-gray-900 transition-colors">
+                Sale
+              </button>
             </div>
 
             <div className="flex items-center space-x-6">
@@ -82,9 +144,10 @@ export default function MinimalistHome() {
               <span className="block font-normal">Elegance</span>
             </h1>
             <p className="text-lg text-gray-600 mb-8 max-w-xl">
-              Discover our carefully curated collection of premium essentials designed for the modern lifestyle
+              Discover our carefully curated collection of premium essentials
+              designed for the modern lifestyle
             </p>
-            <button className="group bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all flex items-center space-x-2 font-medium">
+            <button onClick={ () => addToast('info', "EXPLORING")} className="group bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all flex items-center space-x-2 font-medium">
               <span>Explore Collection</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -101,7 +164,9 @@ export default function MinimalistHome() {
                 <Truck className="w-6 h-6 text-gray-900" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900 mb-1">Free Shipping</h3>
+                <h3 className="font-medium text-gray-900 mb-1">
+                  Free Shipping
+                </h3>
                 <p className="text-sm text-gray-600">On orders over $50</p>
               </div>
             </div>
@@ -110,8 +175,12 @@ export default function MinimalistHome() {
                 <Shield className="w-6 h-6 text-gray-900" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900 mb-1">Secure Payment</h3>
-                <p className="text-sm text-gray-600">100% secure transactions</p>
+                <h3 className="font-medium text-gray-900 mb-1">
+                  Secure Payment
+                </h3>
+                <p className="text-sm text-gray-600">
+                  100% secure transactions
+                </p>
               </div>
             </div>
             <div className="flex items-start space-x-4">
@@ -119,7 +188,9 @@ export default function MinimalistHome() {
                 <Award className="w-6 h-6 text-gray-900" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900 mb-1">Premium Quality</h3>
+                <h3 className="font-medium text-gray-900 mb-1">
+                  Premium Quality
+                </h3>
                 <p className="text-sm text-gray-600">Guaranteed excellence</p>
               </div>
             </div>
@@ -131,8 +202,11 @@ export default function MinimalistHome() {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['Men', 'Women', 'Kids', 'Accessories'].map((cat) => (
-              <button key={cat} className="group relative aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-all">
+            {["Men", "Women", "Kids", "Accessories"].map((cat) => (
+              <button
+                key={cat}
+                className="group relative aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-all"
+              >
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-4xl font-light">
                   {cat.charAt(0)}
                 </div>
@@ -163,24 +237,32 @@ export default function MinimalistHome() {
             </button>
           </div>
 
+            {/* {loading ? <CardSkeletonLoader/> : */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all">
+            {products.map((product) => (
+              <div
+                key={product._id}
+                className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all"
+              >
                 <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light">
-                    {item}
-                  </div>
+                  <img href={product.primaryImage} alt={product.title} className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light">
+                    {/* {product.title.charAt(0)} */}
+                  </img>
                   <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
                     <Heart className="w-5 h-5 text-gray-700" />
                   </button>
                 </div>
                 <div className="p-4">
                   <h3 className="font-medium text-gray-900 mb-1">
-                    Classic Product Name
+                    {product.title}
                   </h3>
-                  <p className="text-sm text-gray-500 mb-3">Premium Collection</p>
+                  <p className="text-sm text-gray-500 mb-3">
+                    {product.category}
+                  </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-medium text-gray-900">$89.00</span>
+                    <span className="text-lg font-medium text-gray-900">
+                      {product.price}$
+                    </span>
                     <div className="flex items-center space-x-1">
                       <Star className="w-4 h-4 fill-gray-900 text-gray-900" />
                       <span className="text-sm text-gray-600">4.9</span>
@@ -190,6 +272,7 @@ export default function MinimalistHome() {
               </div>
             ))}
           </div>
+            {/* } */}
         </div>
       </section>
 
@@ -201,7 +284,8 @@ export default function MinimalistHome() {
               Stay Updated
             </h2>
             <p className="text-gray-600 mb-8">
-              Subscribe to receive updates on new arrivals, exclusive offers, and more
+              Subscribe to receive updates on new arrivals, exclusive offers,
+              and more
             </p>
             <div className="flex gap-3 max-w-md mx-auto">
               <input
@@ -222,7 +306,9 @@ export default function MinimalistHome() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div>
-              <div className="text-xl font-light tracking-wider mb-4">MINIMAL</div>
+              <div className="text-xl font-light tracking-wider mb-4">
+                MINIMAL
+              </div>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Premium quality products for the modern lifestyle
               </p>
@@ -230,25 +316,61 @@ export default function MinimalistHome() {
             <div>
               <h4 className="font-medium mb-4">Shop</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">New Arrivals</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Best Sellers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Sale</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    New Arrivals
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Best Sellers
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Sale
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-medium mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">FAQs</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Shipping</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Contact Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    FAQs
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Shipping
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-medium mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Press
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -257,6 +379,7 @@ export default function MinimalistHome() {
           </div>
         </div>
       </footer>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 }

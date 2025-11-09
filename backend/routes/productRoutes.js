@@ -29,7 +29,7 @@ router.post(
 );
 router.get(
   '/',
-  productRateLimit,
+  // productRateLimit,
   // cacheMiddleware('products', 600),
   productController.getProducts
 );
@@ -49,7 +49,7 @@ router.get(
 
 // Get seller's products
 router.get(
-  '/:sellerId',
+  '/seller/:sellerId',
   isAuthenticated,
   productController.getProductsBySeller
 );

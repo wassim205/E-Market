@@ -81,7 +81,7 @@ export const productRateLimit = (req, res, next) => {
   const key = req.ip;
   const now = Date.now();
   const windowMs = 60000; // 1 minute
-  const maxAttempts = 10; // max 10 requests per minute
+  const maxAttempts = 100; // max 10 requests per minute
 
   if (!attempts.has(key)) {
     attempts.set(key, []);

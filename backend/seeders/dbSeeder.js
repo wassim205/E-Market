@@ -49,6 +49,7 @@ const seedDB = async () => {
     await userFactory(5); // seed users
     await categoryFactory(6); // seed categories
 
+    productFactory(10);
     // Get users to create carts for them
     const users = await User.find().limit(3);
     for (const user of users) {

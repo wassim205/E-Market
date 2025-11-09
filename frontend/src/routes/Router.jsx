@@ -6,6 +6,9 @@ import Home from "../pages/Home";
 // import ProtectedRoute from "./ProtectedRoute";
 import Register from "../pages/Auth/Register";
 import Login from "../pages/Auth/Login";
+import NotFound from "../components/NotFound";
+import ProductsList from "../pages/products/ProductList";
+import ProductDetail from "../pages/products/ProductDetail";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -19,4 +22,17 @@ export const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+  {
+    path: "/products",
+    element: <ProductsList />,
+  },
+  {
+    path: "/products/:id",
+    element: <ProductDetail />,
+  },
+  
 ]);

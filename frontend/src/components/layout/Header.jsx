@@ -20,9 +20,9 @@ function Header() {
           </div>
 
           <div className="flex items-center space-x-6">
-            <button className="cursor-pointer hover:text-gray-900 transition-colors">
+            <Link to="/orders" className="cursor-pointer hover:text-gray-900 transition-colors">
               Track Order
-            </button>
+            </Link>
 
             {user ? (
               <>

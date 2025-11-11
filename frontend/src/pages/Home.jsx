@@ -1,35 +1,16 @@
-import {
-  Search,
-  ShoppingBag,
-  User,
-  Heart,
-  Menu,
-  ArrowRight,
-  Star,
-  Truck,
-  Shield,
-  Award,
-} from "lucide-react";
+import { Heart, ArrowRight, Star, Truck, Shield, Award } from "lucide-react";
 import { useState, useEffect } from "react";
 import api from "../config/axios";
-import { ToastContainer } from "../components/Toast";
 import Header from "../components/layout/Header";
 import { CardSkeletonLoader } from "../components/Loader";
 import { Link } from "react-router-dom";
+import Footer from "../components/layout/Footer";
+import { toast } from "react-toastify";
+import Toast from "../components/Toast";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
-  const [toasts, setToasts] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const addToast = (type, message) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, type, message }]);
-  };
-
-  const removeToast = (id) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  };
 
   useEffect(() => {
     async function fetchProducts() {
@@ -39,15 +20,15 @@ export default function Home() {
         setProducts(res.data.data);
         setLoading(false);
       } catch (error) {
-        addToast("error", error);
+        toast(<Toast type="error" message="Something went wrong" />);
+        console.log(error);
+      } finally {
+        setLoading(false);
+        toast(<Toast type="success" message="Product Loaded Successfully" />);
       }
     }
     fetchProducts();
   }, []);
-
-  // console.log(products);
-  // console.log("http://localhost:3000" + products[0].primaryImage)
-      
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -157,7 +138,10 @@ export default function Home() {
               </h2>
               <p className="text-gray-600">Our most loved items this season</p>
             </div>
-            <Link to="/products" className="text-gray-900 hover:text-gray-600 transition-colors text-sm font-medium hidden md:block">
+            <Link
+              to="/products"
+              className="text-gray-900 hover:text-gray-600 transition-colors text-sm font-medium hidden md:block"
+            >
               View All →
             </Link>
           </div>
@@ -169,43 +153,43 @@ export default function Home() {
                   <CardSkeletonLoader key={i} />
                 ))
               : products.map((product) => (
-                  <div
-                    key={product._id}
-                    className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all"
-                  >
-                    <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
-                     {/* {console.log()} */}
-                      <img
-                        crossOrigin="anonymous"
-                        src={"http://localhost:3000" + product.primaryImage}
-                        alt={product.title}
-                        className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light"
-                      >
-                        {/* {product.title.charAt(0)} */}
-                      </img>
-                    
-                      <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
-                        <Heart className="w-5 h-5 text-gray-700" />
-                      </button>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-medium text-gray-900 mb-1">
-                        {product.title}
-                      </h3>
-                      <p className="text-sm text-gray-500 mb-3">
-                        {product.category}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-medium text-gray-900">
-                          {product.price}$
-                        </span>
-                        <div className="flex items-center space-x-1">
-                          <Star className="w-4 h-4 fill-gray-900 text-gray-900" />
-                          <span className="text-sm text-gray-600">4.9</span>
+                  <Link to={`/products/${product._id}`} key={product._id}>
+                    <div
+                      key={product._id}
+                      className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all"
+                    >
+                      <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
+                        <img
+                          crossOrigin="anonymous"
+                          src={product.primaryImage}
+                          // src={"http://localhost:3000" + product.primaryImage}
+                          alt={product.title}
+                          className="w-full h-full object-cover object-center block"
+                        />
+                        <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                          <Heart className="w-5 h-5 text-gray-700" />
+                        </button>
+                      </div>
+
+                      <div className="p-4">
+                        <h3 className="font-medium text-gray-900 mb-1">
+                          {product.title}
+                        </h3>
+                        <p className="text-sm text-gray-500 mb-3">
+                          {product.category}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-lg font-medium text-gray-900">
+                            {product.price}$
+                          </span>
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-4 h-4 fill-gray-900 text-gray-900" />
+                            <span className="text-sm text-gray-600">4.9</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
           </div>
         </div>
@@ -237,84 +221,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="text-xl font-light tracking-wider mb-4">
-                MINIMAL
-              </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Premium quality products for the modern lifestyle
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Shop</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    New Arrivals
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Best Sellers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Sale
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    FAQs
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Shipping
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Press
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            <p>© 2024 Minimal Store. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-      <ToastContainer toasts={toasts} removeToast={removeToast} />
+      <Footer />
     </div>
   );
 }

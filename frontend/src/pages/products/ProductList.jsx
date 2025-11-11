@@ -15,26 +15,17 @@ import api from "../../config/axios";
 import { Link } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import { FullPageLoader } from "../../components/Loader";
-import { ToastContainer } from "../../components/Toast";
+import Footer from "../../components/layout/Footer";
+import { toast } from "react-toastify";
+import Toast from "../../components/Toast";
 
 export default function ProductsList() {
   const [products, setProducts] = useState([]);
-  const [toasts, setToasts] = useState([]);
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(0);
   const [curretPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  // const [nextPage, setNextPage] = useState(curretPage + 1);
-  // const [previousPage, setPreviousPage] = useState(curretPage - 1);
 
-  const addToast = (type, message) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, type, message }]);
-  };
-
-  const removeToast = (id) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  };
 
   useEffect(() => {
     async function fetchProducts() {
@@ -46,10 +37,10 @@ export default function ProductsList() {
         setProducts(res.data.data);
         setTotal(res.data.meta.total);
         setPages(res.data.meta.pages);
-        addToast("success", "Products loaded successfully");
+        toast(<Toast type="success" message="Products loaded successfully" />)
       } catch (error) {
         console.log(error);
-        addToast("error", "Failed to load products");
+        toast(<Toast type="error" message="Failed to load products" />)
       } finally {
         setLoading(false);
       }
@@ -254,9 +245,10 @@ export default function ProductsList() {
                     <div className="relative aspect-square bg-gray-100 overflow-hidden">
                       <img
                         crossOrigin="anonymous"
-                        src={"http://localhost:3000" + product.primaryImage}
+                        src={product.primaryImage}
+                        // src={"http://localhost:3000" + product.primaryImage}
                         alt={product.title}
-                        className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light"
+                        className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light h-full object-cover object-center"
                       ></img>
                       <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
                         <Heart className="w-5 h-5 text-gray-700" />
@@ -321,86 +313,11 @@ export default function ProductsList() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 mt-20">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="text-xl font-light tracking-wider mb-4">
-                MINIMAL
-              </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Premium quality products for the modern lifestyle
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Shop</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    New Arrivals
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Best Sellers
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Sale
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Contact Us
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    FAQs
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Shipping
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    About
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Careers
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Press
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            <p>© 2024 Minimal Store. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+            <Footer />
+
       {/* <FullPageLoader /> */}
       {loading && <FullPageLoader />}
-      <ToastContainer toasts={toasts} removeToast={removeToast} />
+      {/* <ToastContainer toasts={toasts} removeToast={removeToast} /> */}
       
     </div>
   );

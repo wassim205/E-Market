@@ -3,7 +3,8 @@ import { Mail, Lock, Eye, User, ArrowRight, ShoppingBag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { useAuth } from "../../context/AuthContext";
-import { ToastContainer } from "../../components/Toast";
+import { toast } from "react-toastify";
+import Toast from "../../components/Toast";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -14,23 +15,18 @@ export default function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [toasts, setToasts] = useState([]);
   const { setUser } = useAuth();
-
-
-   const addToast = (type, message) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, type, message }]);
-  };
-
-  const removeToast = (id) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agreeToTerms) {
-      addToast("info", "You must agree to the terms before registering.");
+      toast(
+        <Toast
+          type="info"
+          message="You must agree to the terms before registering."
+        />
+      );
+
       return;
     }
     try {
@@ -49,16 +45,18 @@ export default function Register() {
       setUser(user);
 
       navigate("/");
-    }  catch (error) {
+    } catch (error) {
       if (error.response.data.message) {
-        addToast("error", error.response.data.message);
+        toast(<Toast type="error" message={error.response.data.message} />);
       } else if (error.response.data.errors) {
-         const messages = Object.values(error.response.data.errors)
+        console.log(error.response.data.errors);
+
+        const messages = Object.values(error.response.data.errors)
           .flat()
-          .join(" | "); 
-        addToast("error", messages);
+          .join(" | ");
+        toast(<Toast type="error" message={messages} />);
       } else {
-        addToast("error", "Something went wrong!");
+        toast(<Toast type="error" message="Something went wrong!" />);
       }
     }
   };
@@ -318,8 +316,6 @@ export default function Register() {
           </div>
         </div>
       </div>
-            <ToastContainer toasts={toasts} removeToast={removeToast} />
-
     </div>
   );
 }

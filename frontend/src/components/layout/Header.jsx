@@ -5,8 +5,6 @@ import { Link } from "react-router-dom";
 function Header() {
   const { user, loading, logout } = useAuth();
 
-//   console.log(user);
-  
   if (loading) {
     return <InlineLoader />;
   }
@@ -17,12 +15,8 @@ function Header() {
         {/* Top Bar */}
         <div className="flex items-center justify-between py-4 text-sm text-gray-600">
           <div className="hidden md:flex items-center space-x-6">
-            <button className="hover:text-gray-900 transition-colors">
-              Stores
-            </button>
-            <button className="hover:text-gray-900 transition-colors">
-              Help
-            </button>
+            <Link to="/">Home</Link>
+            <Link to="/products">Products</Link>
           </div>
 
           <div className="flex items-center space-x-6">
@@ -43,7 +37,10 @@ function Header() {
                 </button>
               </>
             ) : (
-              <Link to="/login" className="hover:text-gray-900 transition-colors">
+              <Link
+                to="/login"
+                className="hover:text-gray-900 transition-colors"
+              >
                 Sign In
               </Link>
             )}

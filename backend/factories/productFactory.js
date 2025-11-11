@@ -58,6 +58,20 @@ export const productFactory = async (count = 1, overrides = {}) => {
       ex_price = Number((price * (1 + increasePercent)).toFixed(2));
     }
 
+
+    const seedPrimary = faker.string.uuid();
+const primaryImageUrl =
+  overrides.primaryImage || `https://picsum.photos/seed/${seedPrimary}/1200/800`;
+
+const secondaryImagesArr =
+  Array.isArray(overrides.secondaryImages) && overrides.secondaryImages.length
+    ? overrides.secondaryImages
+    : Array.from(
+        { length: faker.number.int({ min: 0, max: 3 }) },
+        () => `https://picsum.photos/seed/${faker.string.uuid()}/800/600`
+      );
+
+
     const doc = {
       title: overrides.title || faker.commerce.productName(),
       description: overrides.description || faker.lorem.paragraph(),
@@ -67,17 +81,8 @@ export const productFactory = async (count = 1, overrides = {}) => {
       categories: categoryIds.map((c) =>
         typeof c === 'string' ? mongoose.Types.ObjectId(c) : c
       ),
-      primaryImage:
-        overrides.primaryImage ||
-        `/uploads/products/${faker.string.uuid()}.webp`,
-      secondaryImages:
-        Array.isArray(overrides.secondaryImages) &&
-        overrides.secondaryImages.length
-          ? overrides.secondaryImages
-          : Array.from(
-              { length: faker.number.int({ min: 0, max: 3 }) },
-              () => `/uploads/products/${faker.string.uuid()}.webp`
-            ),
+      primaryImage: primaryImageUrl,
+      secondaryImages: secondaryImagesArr,
       published:
         typeof overrides.published === 'boolean'
           ? overrides.published

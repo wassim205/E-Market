@@ -10,10 +10,9 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../config/axios";
-import {
-  FullPageLoader,
-} from "../../components/Loader";
+import { FullPageLoader } from "../../components/Loader";
 import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -43,7 +42,7 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      
+
       <Header />
 
       {/* Breadcrumb */}
@@ -77,7 +76,9 @@ export default function ProductDetail() {
             {/* Main Image */}
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-4 aspect-square">
               <img
-                src={product}
+                crossOrigin="anonymous"
+                src={product.primaryImage}
+                // src={"http://localhost:3000" + product.primaryImage}
                 alt={product}
                 className="w-full h-full flex items-center justify-center text-gray-300 text-9xl font-light"
               ></img>
@@ -96,7 +97,9 @@ export default function ProductDetail() {
                   }`}
                 >
                   <img
+                    crossOrigin="anonymous"
                     src={img}
+                    // src={"http://localhost:3000" + img}
                     alt={product.title}
                     className="w-full h-full flex items-center justify-center text-gray-300 text-3xl font-light"
                   ></img>
@@ -369,83 +372,7 @@ export default function ProductDetail() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 mt-20">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="text-xl font-light tracking-wider mb-4">
-                MINIMAL
-              </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Premium quality products for the modern lifestyle
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Shop</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    New Arrivals
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Best Sellers
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Sale
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Contact Us
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    FAQs
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Shipping
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    About
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Careers
-                  </button>
-                </li>
-                <li>
-                  <button className="hover:text-white transition-colors">
-                    Press
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            <p>© 2024 Minimal Store. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

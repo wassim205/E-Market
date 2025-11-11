@@ -13,124 +13,46 @@ import {
 import { useState, useEffect } from "react";
 import api from "../config/axios";
 import { ToastContainer } from "../components/Toast";
-// import { CardSkeletonLoader } from "../components/Loader";
+import Header from "../components/layout/Header";
+import { CardSkeletonLoader } from "../components/Loader";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [toasts, setToasts] = useState([]);
-  // const [loading, setLoading] = useState(false);
-    
+  const [loading, setLoading] = useState(true);
 
   const addToast = (type, message) => {
     const id = Date.now();
-    setToasts(prev => [...prev, { id, type, message }]);
+    setToasts((prev) => [...prev, { id, type, message }]);
   };
 
   const removeToast = (id) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
   useEffect(() => {
     async function fetchProducts() {
-      // setLoading(true);
+      setLoading(true);
       try {
         const res = await api.get("/products?limit=4");
         setProducts(res.data.data);
-        // setLoading(false);
+        setLoading(false);
       } catch (error) {
-         addToast('error', error);
+        addToast("error", error);
       }
     }
     fetchProducts();
   }, []);
 
-
+  // console.log(products);
+  // console.log("http://localhost:3000" + products[0].primaryImage)
+      
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="container mx-auto px-6">
-          {/* Top Bar */}
-          <div className="flex items-center justify-between py-4 text-sm text-gray-600">
-            <div className="hidden md:flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors">
-                Stores
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Help
-              </button>
-            </div>
-            <div className="flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors">
-                Track Order
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Sign In
-              </button>
-            </div>
-          </div>
-
-          {/* Main Header */}
-          <div className="flex items-center justify-between py-6 border-t border-gray-100">
-            <button className="md:hidden">
-              <Menu className="w-6 h-6 text-gray-900" />
-            </button>
-
-            <div className="text-2xl font-light tracking-wider text-gray-900">
-              MINIMAL
-            </div>
-
-            <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-700">
-              <button className="hover:text-gray-900 transition-colors">
-                New Arrivals
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Men
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Women
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Kids
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Sale
-              </button>
-            </div>
-
-            <div className="flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors hidden md:block">
-                <Search className="w-5 h-5 text-gray-700" />
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                <Heart className="w-5 h-5 text-gray-700" />
-              </button>
-              <button className="hover:text-gray-900 transition-colors relative">
-                <ShoppingBag className="w-5 h-5 text-gray-700" />
-                <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-                  2
-                </span>
-              </button>
-              <button className="hover:text-gray-900 transition-colors hidden md:block">
-                <User className="w-5 h-5 text-gray-700" />
-              </button>
-            </div>
-          </div>
-
-          {/* Search Bar Mobile */}
-          <div className="md:hidden pb-4">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-gray-300 transition-all"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-100 to-gray-50">
@@ -147,7 +69,10 @@ export default function Home() {
               Discover our carefully curated collection of premium essentials
               designed for the modern lifestyle
             </p>
-            <button onClick={ () => addToast('info', "EXPLORING")} className="group bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all flex items-center space-x-2 font-medium">
+            <button
+              onClick={() => addToast("info", "EXPLORING")}
+              className="group bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition-all flex items-center space-x-2 font-medium"
+            >
               <span>Explore Collection</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -232,47 +157,57 @@ export default function Home() {
               </h2>
               <p className="text-gray-600">Our most loved items this season</p>
             </div>
-            <button className="text-gray-900 hover:text-gray-600 transition-colors text-sm font-medium hidden md:block">
+            <Link to="/products" className="text-gray-900 hover:text-gray-600 transition-colors text-sm font-medium hidden md:block">
               View All →
-            </button>
+            </Link>
           </div>
 
-            {/* {loading ? <CardSkeletonLoader/> : */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all"
-              >
-                <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
-                  <img href={product.primaryImage} alt={product.title} className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light">
-                    {/* {product.title.charAt(0)} */}
-                  </img>
-                  <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
-                    <Heart className="w-5 h-5 text-gray-700" />
-                  </button>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-medium text-gray-900 mb-1">
-                    {product.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-3">
-                    {product.category}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-medium text-gray-900">
-                      {product.price}$
-                    </span>
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 fill-gray-900 text-gray-900" />
-                      <span className="text-sm text-gray-600">4.9</span>
+            {loading
+              ? // Render the same number of skeletons as products length (or 4 fallback)
+                Array.from({ length: products?.length || 4 }).map((_, i) => (
+                  <CardSkeletonLoader key={i} />
+                ))
+              : products.map((product) => (
+                  <div
+                    key={product._id}
+                    className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all"
+                  >
+                    <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
+                     {/* {console.log()} */}
+                      <img
+                        crossOrigin="anonymous"
+                        src={"http://localhost:3000" + product.primaryImage}
+                        alt={product.title}
+                        className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light"
+                      >
+                        {/* {product.title.charAt(0)} */}
+                      </img>
+                    
+                      <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                        <Heart className="w-5 h-5 text-gray-700" />
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium text-gray-900 mb-1">
+                        {product.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-3">
+                        {product.category}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-medium text-gray-900">
+                          {product.price}$
+                        </span>
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-4 h-4 fill-gray-900 text-gray-900" />
+                          <span className="text-sm text-gray-600">4.9</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
           </div>
-            {/* } */}
         </div>
       </section>
 

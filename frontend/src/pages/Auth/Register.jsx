@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Mail, Lock, Eye, User, ArrowRight, ShoppingBag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
+import { useAuth } from "../../context/AuthContext";
+import { ToastContainer } from "../../components/Toast";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -12,11 +14,23 @@ export default function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [toasts, setToasts] = useState([]);
+  const { setUser } = useAuth();
+
+
+   const addToast = (type, message) => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, type, message }]);
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agreeToTerms) {
-      console.log("You must agree to the terms before registering.");
+      addToast("info", "You must agree to the terms before registering.");
       return;
     }
     try {
@@ -26,16 +40,26 @@ export default function Register() {
         email,
         password,
       });
-      // console.log(res);
 
       // Store the token in localstorage
       const token = res.data.data.token;
       localStorage.setItem("token", token);
 
+      const user = res.data.data.user;
+      setUser(user);
+
       navigate("/");
-    } catch (error) {
-      console.error(error);
-      console.error(error.response.data.message);
+    }  catch (error) {
+      if (error.response.data.message) {
+        addToast("error", error.response.data.message);
+      } else if (error.response.data.errors) {
+         const messages = Object.values(error.response.data.errors)
+          .flat()
+          .join(" | "); 
+        addToast("error", messages);
+      } else {
+        addToast("error", "Something went wrong!");
+      }
     }
   };
 
@@ -126,7 +150,7 @@ export default function Register() {
                 />
                 <button
                   type="button"
-                  onClick={handleShowPassword} 
+                  onClick={handleShowPassword}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <Eye className="w-5 h-5" />
@@ -294,6 +318,8 @@ export default function Register() {
           </div>
         </div>
       </div>
+            <ToastContainer toasts={toasts} removeToast={removeToast} />
+
     </div>
   );
 }

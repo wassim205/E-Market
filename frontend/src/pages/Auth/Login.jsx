@@ -2,6 +2,8 @@ import { Mail, Lock, Eye, ArrowRight, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
+import { Toast, ToastContainer } from "../../components/Toast";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -10,7 +12,16 @@ export default function Login() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [toasts, setToasts] = useState([]);
+const {setUser} = useAuth();
+  const addToast = (type, message) => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, type, message }]);
+  };
 
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -20,12 +31,25 @@ export default function Login() {
 
       // Store the token in localstorage
       const token = res.data.data.token;
+      const user = res.data.data.user;
+
       localStorage.setItem("token", token);
+      setUser(user);
 
       navigate("/");
     } catch (error) {
-      console.error(error);
-      console.error(error.response.data.errors);
+      if (error.response.data.message) {
+        addToast("error", error.response.data.message);
+      } else if (error.response.data.errors) {
+        // Convert the errors object into a single string
+        const messages = Object.values(error.response.data.errors)
+          .flat()
+          .join(" | "); // you can use "\n" or " • " if you prefer
+        addToast("error", messages);
+      } else {
+        addToast("error", "Something went wrong!");
+      }
+      // console.error(error);
     }
   };
 
@@ -228,6 +252,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 }

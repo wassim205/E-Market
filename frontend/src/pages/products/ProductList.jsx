@@ -13,29 +13,32 @@ import {
 import { useEffect, useState } from "react";
 import api from "../../config/axios";
 import { Link } from "react-router-dom";
+import Header from "../../components/layout/Header";
+import { FullPageLoader } from "../../components/Loader";
+import { ToastContainer } from "../../components/Toast";
 
 export default function ProductsList() {
   const [products, setProducts] = useState([]);
-  // const [toasts, setToasts] = useState([]);
+  const [toasts, setToasts] = useState([]);
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(0);
   const [curretPage, setCurrentPage] = useState(1);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const [nextPage, setNextPage] = useState(curretPage + 1);
   // const [previousPage, setPreviousPage] = useState(curretPage - 1);
 
-  // const addToast = (type, message) => {
-  //   const id = Date.now();
-  //   setToasts((prev) => [...prev, { id, type, message }]);
-  // };
+  const addToast = (type, message) => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, type, message }]);
+  };
 
-  // const removeToast = (id) => {
-  //   setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  // };
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
 
   useEffect(() => {
     async function fetchProducts() {
-      // setLoading(true);
+      setLoading(true);
       try {
         const res = await api.get("/products", {
           params: { page: curretPage, limit: 12 },
@@ -43,13 +46,12 @@ export default function ProductsList() {
         setProducts(res.data.data);
         setTotal(res.data.meta.total);
         setPages(res.data.meta.pages);
-        // setCurrentPage(res.data.meta.page);
+        addToast("success", "Products loaded successfully");
       } catch (error) {
         console.log(error);
-
-        // addToast("error", error);
+        addToast("error", "Failed to load products");
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     }
     fetchProducts();
@@ -61,76 +63,7 @@ export default function ProductsList() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="container mx-auto px-6">
-          {/* Top Bar */}
-          <div className="flex items-center justify-between py-4 text-sm text-gray-600">
-            <div className="hidden md:flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors">
-                Stores
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Help
-              </button>
-            </div>
-            <div className="flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors">
-                Track Order
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Sign In
-              </button>
-            </div>
-          </div>
-
-          {/* Main Header */}
-          <div className="flex items-center justify-between py-6 border-t border-gray-100">
-            <button className="md:hidden">
-              <Menu className="w-6 h-6 text-gray-900" />
-            </button>
-
-            <div className="text-2xl font-light tracking-wider text-gray-900">
-              MINIMAL
-            </div>
-
-            <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-700">
-              <button className="hover:text-gray-900 transition-colors">
-                New Arrivals
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Men
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Women
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Kids
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                Sale
-              </button>
-            </div>
-
-            <div className="flex items-center space-x-6">
-              <button className="hover:text-gray-900 transition-colors hidden md:block">
-                <Search className="w-5 h-5 text-gray-700" />
-              </button>
-              <button className="hover:text-gray-900 transition-colors">
-                <Heart className="w-5 h-5 text-gray-700" />
-              </button>
-              <button className="hover:text-gray-900 transition-colors relative">
-                <ShoppingBag className="w-5 h-5 text-gray-700" />
-                <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-                  2
-                </span>
-              </button>
-              <button className="hover:text-gray-900 transition-colors hidden md:block">
-                <User className="w-5 h-5 text-gray-700" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
@@ -313,47 +246,48 @@ export default function ProductsList() {
             {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
-             <Link to={`/products/${product._id}`} key={product._id}>
-                <div
-                  key={product._id}
-                  className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all"
-                >
-                  <div className="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img
-                      src={product.primaryImage}
-                      alt={product.title}
-                      className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light"
-                    ></img>
-                    <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
-                      <Heart className="w-5 h-5 text-gray-700" />
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-medium text-gray-900 mb-1 group-hover:text-gray-600 transition-colors">
-                      {product.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-3">
-                      {product.categories.map((category) => category.name)}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-lg font-medium text-gray-900">
-                          ${product.price}
-                        </span>
-                        {product.ex_price && (
-                          <span className="text-sm text-gray-400 line-through">
-                            ${product.ex_price}
+                <Link to={`/products/${product._id}`} key={product._id}>
+                  <div
+                    key={product._id}
+                    className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all"
+                  >
+                    <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                      <img
+                        crossOrigin="anonymous"
+                        src={"http://localhost:3000" + product.primaryImage}
+                        alt={product.title}
+                        className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl font-light"
+                      ></img>
+                      <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                        <Heart className="w-5 h-5 text-gray-700" />
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium text-gray-900 mb-1 group-hover:text-gray-600 transition-colors">
+                        {product.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-3">
+                        {product.categories.map((category) => category.name)}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg font-medium text-gray-900">
+                            ${product.price}
                           </span>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 fill-gray-900 text-gray-900" />
-                        <span className="text-sm text-gray-600">4.8</span>
+                          {product.ex_price && (
+                            <span className="text-sm text-gray-400 line-through">
+                              ${product.ex_price}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-4 h-4 fill-gray-900 text-gray-900" />
+                          <span className="text-sm text-gray-600">4.8</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
               ))}
             </div>
 
@@ -464,6 +398,10 @@ export default function ProductsList() {
           </div>
         </div>
       </footer>
+      {/* <FullPageLoader /> */}
+      {loading && <FullPageLoader />}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+      
     </div>
   );
 }

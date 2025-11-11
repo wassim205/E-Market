@@ -28,6 +28,8 @@ import swaggerOptions from './config/swagger.js';
 import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 
 const env = process.env.NODE_ENV || 'development'; // Default to development
@@ -59,12 +61,18 @@ app.get('/', (req, res) => {
   res.send(`Server is running on http://localhost:${PORT}`);
 });
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 app.use(helmet());
 app.use(cors({
   origin: process.env.ALLOWED_URL,
   credentials: true,
 }));
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Start cron jobs
 // lowStockJob.start();
